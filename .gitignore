@@ -12,6 +12,7 @@ yarn-error.log*
 # Scratch Python test runners and temporary screenshots in root
 *.png
 !assets/screenshots/*.png
+!images/*.png
 test_*.py
 verify_*.py
 __pycache__/
