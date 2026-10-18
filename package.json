@@ -1,0 +1,21 @@
+{
+  "name": "cinevo",
+  "version": "1.0.0",
+  "description": "Cinevo — Multi-source OTT discovery, streaming, and Live TV platform.",
+  "scripts": {
+    "start": "node serve.js",
+    "serve": "node serve.js",
+    "test": "node test.js"
+  },
+  "keywords": [
+    "streaming",
+    "ott",
+    "movies",
+    "series",
+    "anime",
+    "live-tv",
+    "tmdb"
+  ],
+  "author": "",
+  "license": "MIT"
+}

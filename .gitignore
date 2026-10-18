@@ -1,0 +1,22 @@
+# Dependency and runtime artifacts
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Backups, scratch files, and logs
+*.bak
+*.tmp
+*.log
+
+# Scratch Python test runners and temporary screenshots in root
+*.png
+!assets/screenshots/*.png
+test_*.py
+verify_*.py
+__pycache__/
+*.py[cod]
+
+# OS artifacts
+.DS_Store
+Thumbs.db

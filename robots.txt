@@ -1,0 +1,35 @@
+# Cinevo robots.txt - Optimized for Googlebot, Bingbot & AI Crawlers
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_serverFn/
+
+User-agent: Googlebot
+Allow: /
+User-agent: Googlebot-Image
+Allow: /
+User-agent: Googlebot-Video
+Allow: /
+User-agent: Bingbot
+Allow: /
+User-agent: Applebot
+Allow: /
+User-agent: DuckDuckBot
+Allow: /
+User-agent: Baiduspider
+Allow: /
+User-agent: YandexBot
+Allow: /
+
+# Generative AI Search Crawlers (GEO Optimization)
+User-agent: PerplexityBot
+Allow: /
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://jaskaran331.github.io/cinevo/sitemap.xml
+Host: https://jaskaran331.github.io/cinevo
