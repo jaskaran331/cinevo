@@ -1,5 +1,5 @@
 module.exports = (req, res) => {
-  const host = req.headers['x-forwarded-host'] || req.headers.host || 'cinevo.vercel.app';
+  const host = req.headers['x-forwarded-host'] || req.headers.host || 'cinevo1.vercel.app';
   const proto = req.headers['x-forwarded-proto'] || 'https';
   const baseUrl = `${proto}://${host}`;
 

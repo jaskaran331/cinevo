@@ -6,8 +6,16 @@
     { "source": "/robots.txt", "destination": "/api/robots" },
     { "source": "/site.webmanifest", "destination": "/site.webmanifest" },
     { "source": "/images/(.*)", "destination": "/images/$1" },
-    { "source": "/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/assets/screenshots/(.*)", "destination": "/assets/screenshots/$1" },
     { "source": "/google(.*).html", "destination": "/google$1.html" },
+    { "source": "/embed/(.*)", "destination": "https://livetgtv.lovable.app/embed/$1" },
+    { "source": "/v2/embed/(.*)", "destination": "https://livetgtv.lovable.app/v2/embed/$1" },
+    { "source": "/api/public/(.*)", "destination": "https://livetgtv.lovable.app/api/public/$1" },
+    { "source": "/assets/(.*)", "destination": "https://livetgtv.lovable.app/assets/$1" },
+    { "source": "/_server-fn/(.*)", "destination": "https://livetgtv.lovable.app/_server-fn/$1" },
+    { "source": "/_serverFn/(.*)", "destination": "https://livetgtv.lovable.app/_serverFn/$1" },
+    { "source": "/__l5e/(.*)", "destination": "https://livetgtv.lovable.app/__l5e/$1" },
+    { "source": "/~flock.js", "destination": "https://livetgtv.lovable.app/~flock.js" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
