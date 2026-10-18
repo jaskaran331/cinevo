@@ -263,6 +263,19 @@ const server = http.createServer((req, res) => {
     return proxyLiveRequest(req, res);
   }
 
+  if (reqPath === '/sitemap.xml') {
+    const sitemapHandler = require('./api/sitemap.js');
+    return sitemapHandler(req, {
+      setHeader: (k, v) => res.setHeader(k, v),
+      status: (code) => ({
+        send: (body) => {
+          res.writeHead(code, { 'Content-Type': 'application/xml; charset=utf-8' });
+          res.end(body);
+        }
+      })
+    });
+  }
+
   if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
 
   const filePath = path.join(PUBLIC_DIR, reqPath);
