@@ -322,7 +322,7 @@ export async function searchTitles(query, signal = null) {
   const merged = [];
 
   if (topPinnedItem) {
-    seen.add(`tv-${topPinnedItem.id}`);
+    seen.add(`${topPinnedItem.mediaType || 'tv'}-${topPinnedItem.id}-s${topPinnedItem.targetSeason || 1}`);
     seen.add(`${topPinnedItem.category}-${(topPinnedItem.title || '').toLowerCase().replace(/[^a-z0-9]/g, '')}`);
     merged.push(topPinnedItem);
   }
@@ -332,7 +332,7 @@ export async function searchTitles(query, signal = null) {
       item.targetSeason = targetSeason;
       item.season = targetSeason;
     }
-    const key = `${item.mediaType}-${item.id}`;
+    const key = `${item.mediaType}-${item.id}-s${item.targetSeason || 1}`;
     const nameKey = `${item.category}-${(item.title || '').toLowerCase().replace(/[^a-z0-9]/g, '')}`;
     if (!seen.has(key) && !seen.has(nameKey)) {
       seen.add(key);
