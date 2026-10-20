@@ -146,30 +146,86 @@ export async function discoverByPlatform(platform, mediaType = 'movie', genreId 
   };
 }
 
-const KNOWN_ANIME_MAP = [
-  { match: /thousand[- ]year|tybw|blood war/i, tmdbId: 30984, season: 2, title: "BLEACH: Thousand-Year Blood War" },
-  { match: /the separation/i, tmdbId: 30984, season: 3, title: "BLEACH: TYBW - The Separation" },
-  { match: /the conflict/i, tmdbId: 30984, season: 4, title: "BLEACH: TYBW - The Conflict" },
-  { match: /solo leveling.*(?:season 2|arise|shadow)/i, tmdbId: 127532, season: 2, title: "Solo Leveling Season 2 -Arise from the Shadow-" },
-  { match: /mugen train/i, tmdbId: 85937, season: 2, title: "Demon Slayer: Mugen Train Arc" },
-  { match: /entertainment district/i, tmdbId: 85937, season: 3, title: "Demon Slayer: Entertainment District Arc" },
-  { match: /swordsmith village/i, tmdbId: 85937, season: 4, title: "Demon Slayer: Swordsmith Village Arc" },
-  { match: /hashira training/i, tmdbId: 85937, season: 5, title: "Demon Slayer: Hashira Training Arc" },
-  { match: /final season.*part 2/i, tmdbId: 1429, season: 5, title: "Attack on Titan: The Final Season Part 2" },
-  { match: /final (?:chapters|season.*part 3)/i, tmdbId: 1429, season: 6, title: "Attack on Titan: The Final Chapters" },
-  { match: /final season/i, tmdbId: 1429, season: 4, title: "Attack on Titan: The Final Season" },
-  { match: /shibuya incident|jujutsu kaisen.*season 2/i, tmdbId: 95479, season: 2, title: "Jujutsu Kaisen Season 2: Shibuya Incident" }
+const SPECIFIC_ANIME_MAP = [
+  // Bleach TYBW parts
+  { match: /(?:bleach.*)?(?:tybw|thousand[- ]year|blood war).*(?:(?:arc|season|s)\s*4|part\s*3|cour\s*3|conflict)/i, tmdbId: 30984, season: 4, title: "BLEACH: TYBW - The Conflict", baseQuery: "bleach", category: "anime" },
+  { match: /(?:bleach.*)?(?:tybw|thousand[- ]year|blood war).*(?:(?:arc|season|s)\s*3|part\s*2|cour\s*2|separation)/i, tmdbId: 30984, season: 3, title: "BLEACH: TYBW - The Separation", baseQuery: "bleach", category: "anime" },
+  { match: /(?:bleach.*)?(?:tybw|thousand[- ]year|blood war)(?:.*(?:(?:arc|season|s)\s*[12]|part\s*1|cour\s*1))?/i, tmdbId: 30984, season: 2, title: "BLEACH: Thousand-Year Blood War", baseQuery: "bleach", category: "anime" },
+  // Solo Leveling
+  { match: /solo leveling.*(?:season\s*2|s\s*2|arise|shadow)/i, tmdbId: 127532, season: 2, title: "Solo Leveling Season 2 -Arise from the Shadow-", baseQuery: "solo leveling", category: "anime" },
+  // Demon Slayer
+  { match: /demon slayer.*(?:hashira|season\s*5|s\s*5)/i, tmdbId: 85937, season: 5, title: "Demon Slayer: Hashira Training Arc", baseQuery: "demon slayer", category: "anime" },
+  { match: /demon slayer.*(?:swordsmith|season\s*4|s\s*4)/i, tmdbId: 85937, season: 4, title: "Demon Slayer: Swordsmith Village Arc", baseQuery: "demon slayer", category: "anime" },
+  { match: /demon slayer.*(?:entertainment district|season\s*3|s\s*3)/i, tmdbId: 85937, season: 3, title: "Demon Slayer: Entertainment District Arc", baseQuery: "demon slayer", category: "anime" },
+  { match: /demon slayer.*(?:mugen train|season\s*2|s\s*2)/i, tmdbId: 85937, season: 2, title: "Demon Slayer: Mugen Train Arc", baseQuery: "demon slayer", category: "anime" },
+  // Attack on Titan
+  { match: /(?:attack on titan|aot).*(?:final (?:chapters|season.*part 3)|season\s*6|s\s*6)/i, tmdbId: 1429, season: 6, title: "Attack on Titan: The Final Chapters", baseQuery: "attack on titan", category: "anime" },
+  { match: /(?:attack on titan|aot).*(?:final season.*part 2|season\s*5|s\s*5)/i, tmdbId: 1429, season: 5, title: "Attack on Titan: The Final Season Part 2", baseQuery: "attack on titan", category: "anime" },
+  { match: /(?:attack on titan|aot).*(?:final season|season\s*4|s\s*4)/i, tmdbId: 1429, season: 4, title: "Attack on Titan: The Final Season", baseQuery: "attack on titan", category: "anime" },
+  // Jujutsu Kaisen
+  { match: /(?:jujutsu kaisen|jjk).*(?:shibuya|season\s*2|s\s*2)/i, tmdbId: 95479, season: 2, title: "Jujutsu Kaisen Season 2: Shibuya Incident", baseQuery: "jujutsu kaisen", category: "anime" },
+  // Re:Zero
+  { match: /re:?zero.*(?:season\s*3|s\s*3)/i, tmdbId: 65942, season: 3, title: "Re:ZERO -Starting Life in Another World- Season 3", baseQuery: "re zero", category: "anime" },
+  { match: /re:?zero.*(?:season\s*2|s\s*2)/i, tmdbId: 65942, season: 2, title: "Re:ZERO -Starting Life in Another World- Season 2", baseQuery: "re zero", category: "anime" },
+  // Blue Lock
+  { match: /blue lock.*(?:season\s*2|s\s*2|u[- ]20)/i, tmdbId: 125392, season: 2, title: "Blue Lock Season 2: Vs. U-20", baseQuery: "blue lock", category: "anime" },
+  // SPY x FAMILY
+  { match: /spy.*family.*(?:season\s*2|s\s*2)/i, tmdbId: 120089, season: 2, title: "SPY x FAMILY Season 2", baseQuery: "spy family", category: "anime" },
+  // Mushoku Tensei
+  { match: /mushoku.*(?:season\s*2|s\s*2)/i, tmdbId: 94664, season: 2, title: "Mushoku Tensei: Jobless Reincarnation Season 2", baseQuery: "mushoku tensei", category: "anime" },
+  // Tower of God
+  { match: /tower of god.*(?:season\s*2|s\s*2)/i, tmdbId: 203737, season: 2, title: "Tower of God Season 2: Return of the Prince", baseQuery: "tower of god", category: "anime" },
+  // Shangri-La Frontier
+  { match: /shangri[- ]la.*(?:season\s*2|s\s*2)/i, tmdbId: 220542, season: 2, title: "Shangri-La Frontier Season 2", baseQuery: "shangri la", category: "anime" }
 ];
 
 /**
- * Instant multi-search across movies & TV shows
+ * Instant multi-search across movies & TV shows with smart query normalization
  */
 export async function searchTitles(query, signal = null) {
-  if (!query || query.trim().length < 2) return [];
+  const rawQ = (query || '').trim();
+  if (rawQ.length < 2) return [];
 
-  const tmdbP = tmdbFetch('/search/multi', { query: query.trim() }, signal)
-    .then(data => (data.results || []).filter(item => item.media_type === 'movie' || item.media_type === 'tv').map(item => normalizeItem(item)))
-    .catch(() => []);
+  // 1. Direct match on user query
+  const directMatch = SPECIFIC_ANIME_MAP.find(k => k.match.test(rawQ));
+
+  // 2. Extract season number
+  let targetSeason = directMatch ? directMatch.season : null;
+  if (!targetSeason) {
+    const sMatch = rawQ.match(/\b(?:season|s)\s*([0-9]{1,2})\b/i) || rawQ.match(/\b([0-9]{1,2})(?:st|nd|rd|th)\s+season\b/i);
+    if (sMatch) {
+      targetSeason = Number(sMatch[1]);
+    }
+  }
+
+  // 3. Clean query for TMDB & AniList by stripping noise tokens
+  let cleanQ = rawQ
+    .replace(/\b(?:season|s)\s*[0-9]{1,2}\b/gi, ' ')
+    .replace(/\b[0-9]{1,2}(?:st|nd|rd|th)\s+season\b/gi, ' ')
+    .replace(/\b(?:part|pt|cour)\s*[0-9]{1,2}\b/gi, ' ')
+    .replace(/\b(?:arc|dub|sub|hindi|english|watch|online|free|full|hd)\b/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  // Acronym expansion
+  cleanQ = cleanQ
+    .replace(/\btybw\b/gi, 'thousand year blood war')
+    .replace(/\baot\b/gi, 'attack on titan')
+    .replace(/\bjjk\b/gi, 'jujutsu kaisen')
+    .replace(/\bds\b/gi, 'demon slayer')
+    .replace(/\bhotd\b/gi, 'house of the dragon')
+    .trim();
+
+  const searchTerms = [];
+  if (cleanQ && cleanQ.length >= 2) searchTerms.push(cleanQ);
+  if (directMatch?.baseQuery && !searchTerms.includes(directMatch.baseQuery)) searchTerms.push(directMatch.baseQuery);
+  if (searchTerms.length === 0 || (!searchTerms.includes(rawQ) && rawQ.length >= 2)) searchTerms.push(rawQ);
+
+  const tmdbPromises = searchTerms.map(term =>
+    tmdbFetch('/search/multi', { query: term }, signal)
+      .then(d => (d.results || []).filter(item => item.media_type === 'movie' || item.media_type === 'tv').map(item => normalizeItem(item, item.media_type)))
+      .catch(() => [])
+  );
 
   const aniQry = `query ($search: String) {
     Page(page: 1, perPage: 12) {
@@ -188,10 +244,10 @@ export async function searchTitles(query, signal = null) {
     }
   }`;
 
-  const aniP = fetch('https://graphql.anilist.co', {
+  const aniPromise = fetch('https://graphql.anilist.co', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-    body: JSON.stringify({ query: aniQry, variables: { search: query.trim() } }),
+    body: JSON.stringify({ query: aniQry, variables: { search: searchTerms[0] } }),
     signal
   }).then(async r => {
     if (!r.ok) return [];
@@ -199,8 +255,7 @@ export async function searchTitles(query, signal = null) {
     return (d.data?.Page?.media || []).map(m => {
       const engTitle = m.title.english || m.title.romaji || 'Untitled';
       const fullTxt = `${engTitle} ${m.title.romaji || ''}`;
-      const mapped = KNOWN_ANIME_MAP.find(k => k.match.test(fullTxt));
-
+      const mapped = SPECIFIC_ANIME_MAP.find(k => k.match.test(fullTxt));
       return {
         id: mapped ? mapped.tmdbId : m.id,
         mediaType: m.format === 'MOVIE' ? 'movie' : 'tv',
@@ -215,21 +270,73 @@ export async function searchTitles(query, signal = null) {
         voteCount: 100,
         genreIds: [16],
         originalLanguage: 'ja',
-        targetSeason: mapped ? mapped.season : null,
+        targetSeason: mapped ? mapped.season : targetSeason,
+        season: mapped ? mapped.season : targetSeason,
         aniId: m.id,
         isAniList: !mapped
       };
     });
   }).catch(() => []);
 
-  const [tItems, aItems] = await Promise.all([tmdbP, aniP]);
+  const [aniResults, ...tmdbResultSets] = await Promise.all([aniPromise, ...tmdbPromises]);
+  const allTmdb = tmdbResultSets.flat();
+
+  let topPinnedItem = null;
+  if (directMatch) {
+    const parentTmdb = allTmdb.find(item => item.id === directMatch.tmdbId);
+    topPinnedItem = {
+      id: directMatch.tmdbId,
+      mediaType: 'tv',
+      category: directMatch.category || 'anime',
+      title: directMatch.title,
+      originalTitle: parentTmdb?.originalTitle || directMatch.title,
+      overview: parentTmdb?.overview || '',
+      posterPath: parentTmdb?.posterPath || null,
+      backdropPath: parentTmdb?.backdropPath || null,
+      releaseDate: parentTmdb?.releaseDate || '',
+      rating: parentTmdb?.rating || 8.8,
+      voteCount: parentTmdb?.voteCount || 1000,
+      genreIds: parentTmdb?.genreIds || [16],
+      originalLanguage: 'ja',
+      targetSeason: directMatch.season,
+      season: directMatch.season
+    };
+  }
+
+  const qLower = (cleanQ || rawQ).toLowerCase();
+  function getScore(item) {
+    const t = (item.title || '').toLowerCase();
+    if (t === qLower) return 1000;
+    if (t.startsWith(qLower)) return 800;
+    if (t.includes(qLower)) return 600;
+    const words = qLower.split(' ').filter(w => w.length > 2);
+    let matchCount = 0;
+    words.forEach(w => { if (t.includes(w)) matchCount++; });
+    return matchCount * 100 + (item.voteCount ? Math.min(item.voteCount, 100) : 0);
+  }
+
+  const pool = [...allTmdb, ...aniResults];
+  pool.sort((a, b) => getScore(b) - getScore(a));
+
   const seen = new Set();
   const merged = [];
 
-  for (const item of [...aItems, ...tItems]) {
-    const key = `${item.category}-${(item.title || '').toLowerCase().replace(/[^a-z0-9]/g, '')}`;
-    if (!seen.has(key)) {
+  if (topPinnedItem) {
+    seen.add(`tv-${topPinnedItem.id}`);
+    seen.add(`${topPinnedItem.category}-${(topPinnedItem.title || '').toLowerCase().replace(/[^a-z0-9]/g, '')}`);
+    merged.push(topPinnedItem);
+  }
+
+  for (const item of pool) {
+    if (targetSeason && item.mediaType === 'tv' && !item.targetSeason) {
+      item.targetSeason = targetSeason;
+      item.season = targetSeason;
+    }
+    const key = `${item.mediaType}-${item.id}`;
+    const nameKey = `${item.category}-${(item.title || '').toLowerCase().replace(/[^a-z0-9]/g, '')}`;
+    if (!seen.has(key) && !seen.has(nameKey)) {
       seen.add(key);
+      seen.add(nameKey);
       merged.push(item);
     }
   }
